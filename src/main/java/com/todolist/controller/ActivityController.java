@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+@CrossOrigin(origins = "*") // Para teste inicial. No futuro, coloque apenas a URL do seu Front.
 @RestController
 @RequestMapping("/api/projects/{projectId}/activities")
 @RequiredArgsConstructor
