@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-@CrossOrigin(origins = "*") // Para teste inicial. No futuro, coloque apenas a URL do seu Front.
+@CrossOrigin(origins = "https://project-todolist-frontend-mwo98bb8d.vercel.app")
 @RestController
 @RequestMapping("/api/projects/{projectId}/activities")
 @RequiredArgsConstructor
