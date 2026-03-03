@@ -16,22 +16,26 @@ import org.springframework.web.bind.annotation.*;
 import java.util.HashMap;
 import java.util.Map;
 
-@CrossOrigin(origins = "*", maxAge = 3600)
+@CrossOrigin(maxAge = 3600, originPatterns = "*", allowCredentials = "true")
 @RestController
 @RequestMapping("/api/auth")
 public class AuthController {
-    @Autowired
-    AuthenticationManager authenticationManager;
     @Autowired
     UserRepository userRepository;
     @Autowired
     PasswordEncoder encoder;
     @Autowired
     JwtUtils jwtUtils;
+    
+    private final AuthenticationManager authenticationManager;
+    
+    public AuthController(AuthenticationManager authenticationManager) {
+    	this.authenticationManager = authenticationManager;
+    }
+    
     @PostMapping("/signin")
     public ResponseEntity<?> authenticateUser(@RequestBody LoginRequest loginRequest) {
-        Authentication authentication = authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(loginRequest.getUsername(), loginRequest.getPassword()));
+        Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(loginRequest.getUsername(), loginRequest.getPassword()));
         SecurityContextHolder.getContext().setAuthentication(authentication);
         String jwt = jwtUtils.generateJwtToken(authentication);
         Map<String, Object> response = new HashMap<>();
