@@ -1,5 +1,12 @@
-{"properties": [{
-  "name": "spring.web.error.whitelabel.enabled",
-  "type": "java.lang.String",
-  "description": "A description for 'spring.web.error.whitelabel.enabled'"
-}]}
+{"properties": [
+  {
+    "name": "todolist.jwtSecret",
+    "type": "java.lang.String",
+    "description": "Chave mestra para assinatura dos tokens JWT."
+  },
+  {
+    "name": "todolist.jwtExpirationMs",
+    "type": "java.lang.Integer",
+    "description": "Tempo de expiração do token em milissegundos."
+  } 
+]}
