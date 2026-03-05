@@ -4,6 +4,8 @@ import jakarta.persistence.*;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+
 @Entity
 @Table(name = "activities")
 public class Activity {
@@ -24,8 +26,9 @@ public class Activity {
 
     private LocalDate dueDate;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "project_id", nullable = false)
+    @ManyToOne
+    @JoinColumn(name = "project_id")
+    @JsonBackReference
     private Project project;
 
     @Column(nullable = false, updatable = false)
@@ -33,28 +36,96 @@ public class Activity {
 
     @Column(nullable = false)
     private LocalDateTime updatedAt = LocalDateTime.now();
+    
+    @PreUpdate
+    protected void onUpdate() {
+    	this.updatedAt = LocalDateTime.now();
+    }
+    
+    @Column(name = "startedAt")
+    private LocalDateTime startedAt;
+    
+    @Column(name = "finishedAt")
+    private LocalDateTime finishedAt;
 
-    public Long getId() { return id; }
-    public void setId(Long id) { this.id = id; }
+    public Long getId() { 
+    	return id; 
+    }
+    
+    public void setId(Long id) { 
+    	this.id = id; 
+    }
 
-    public String getTitle() { return title; }
-    public void setTitle(String title) { this.title = title; }
+    public String getTitle() { 
+    	return title;
+    }
+    
+    public void setTitle(String title) { 
+    	this.title = title;
+    }
 
-    public String getDescription() { return description; }
-    public void setDescription(String description) { this.description = description; }
+    public String getDescription() { 
+    	return description; 
+    }
+    
+    public void setDescription(String description) { 
+    	this.description = description; 
+    }
 
-    public ActivityStatus getStatus() { return status; }
-    public void setStatus(ActivityStatus status) { this.status = status; }
+    public ActivityStatus getStatus() { 
+    	return status; 
+    }
+    
+    public void setStatus(ActivityStatus status) { 
+    	this.status = status; 
+    }
 
-    public LocalDate getDueDate() { return dueDate; }
-    public void setDueDate(LocalDate dueDate) { this.dueDate = dueDate; }
+    public LocalDate getDueDate() { 
+    	return dueDate; 
+    }
+    
+    public void setDueDate(LocalDate dueDate) { 
+    	this.dueDate = dueDate; 
+    }
 
-    public Project getProject() { return project; }
-    public void setProject(Project project) { this.project = project; }
+    public Project getProject() { 
+    	return project; 
+    }
+    
+    public void setProject(Project project) { 
+    	this.project = project; 
+    }
 
-    public LocalDateTime getCreatedAt() { return createdAt; }
-    public void setCreatedAt(LocalDateTime createdAt) { this.createdAt = createdAt; }
+    public LocalDateTime getCreatedAt() { 
+    	return createdAt; 
+    }
+    
+    public void setCreatedAt(LocalDateTime createdAt) { 
+    	this.createdAt = createdAt; 
+    }
 
-    public LocalDateTime getUpdatedAt() { return updatedAt; }
-    public void setUpdatedAt(LocalDateTime updatedAt) { this.updatedAt = updatedAt; }
+    public LocalDateTime getUpdatedAt() { 
+    	return updatedAt; 
+    }
+    
+    public void setUpdatedAt(LocalDateTime updatedAt) { 
+    	this.updatedAt = updatedAt; 
+    }
+
+	public LocalDateTime getStartedAt() {
+		return startedAt;
+	}
+
+	public void setStartedAt(LocalDateTime startedAt) {
+		this.startedAt = startedAt;
+	}
+
+	public LocalDateTime getFinishedAt() {
+		return finishedAt;
+	}
+
+	public void setFinishedAt(LocalDateTime finishedAt) {
+		this.finishedAt = finishedAt;
+	}
+    
 }

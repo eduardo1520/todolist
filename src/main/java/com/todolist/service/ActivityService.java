@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
@@ -62,7 +63,26 @@ public class ActivityService {
     @Transactional
     public ActivityDTO.Response updateStatus(Long projectId, Long activityId, ActivityDTO.StatusRequest request) {
         Activity activity = getActivityOrThrow(projectId, activityId);
-        activity.setStatus(request.getStatus());
+        ActivityStatus newStatus = request.getStatus(); // Facilita a leitura
+
+        activity.setStatus(newStatus);
+
+        // Se mudou para EM ANDAMENTO: define a data de início apenas na primeira vez
+        if (newStatus == ActivityStatus.DOING && activity.getStartedAt() == null) {
+            activity.setStartedAt(LocalDateTime.now());
+        } 
+        
+        // Se mudou para CONCLUÍDO: atualiza sempre para o horário da última finalização
+        else if (newStatus == ActivityStatus.DONE) {
+            activity.setFinishedAt(LocalDateTime.now());
+        }
+        
+        // Opcional: Se voltar para TODO, podemos limpar as datas se quiser reiniciar o ciclo
+        else if (newStatus == ActivityStatus.TODO) {
+            activity.setStartedAt(null);
+            activity.setFinishedAt(null);
+         }
+
         return toResponse(activityRepository.save(activity));
     }
 
@@ -93,6 +113,8 @@ public class ActivityService {
         response.setProjectId(activity.getProject().getId());
         response.setCreatedAt(activity.getCreatedAt());
         response.setUpdatedAt(activity.getUpdatedAt());
+        response.setStartedAt(activity.getStartedAt());
+        response.setFinishedAt(activity.getFinishedAt());
         return response;
     }
 }

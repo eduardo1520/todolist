@@ -1,5 +1,6 @@
 package com.todolist.service;
 
+import com.todolist.dto.ActivityDTO;
 import com.todolist.dto.ProjectDTO;
 import com.todolist.exception.ResourceNotFoundException;
 import com.todolist.model.Activity;
@@ -31,6 +32,21 @@ public class ProjectService {
     
     public ProjectDTO.Response findById(Long id) {
         Project project = getOrThrow(id);
+        ProjectDTO.Response response = new ProjectDTO.Response();
+        response.setId(project.getId());
+        response.setName(project.getName());
+        response.setDescription(project.getDescription());
+        
+        List<ActivityDTO.Response> activityResponses = project.getActivities().stream()
+                .map(activity -> {
+                    ActivityDTO.Response actDto = new ActivityDTO.Response();
+                    actDto.setId(activity.getId());
+                    actDto.setTitle(activity.getTitle());
+                    actDto.setStatus(activity.getStatus()); 
+                    actDto.setDescription(activity.getDescription());
+                    return actDto;
+                }).collect(Collectors.toList());
+            response.setActivities(activityResponses);
         return toResponse(project);
     }
 
@@ -52,6 +68,9 @@ public class ProjectService {
         project.setName(name);
         String description = (String ) request.getDescription();
         project.setDescription(description);
+        
+        project.setImageUrl(request.getImageUrl());
+        
         return toResponse(projectRepository.save(project));
     }
 
@@ -79,6 +98,25 @@ public class ProjectService {
         response.setDoneCount(activities.stream().filter(a -> a.getStatus() == ActivityStatus.DONE).count());
         boolean finished = !activities.isEmpty() && activities.stream().allMatch(a -> a.getStatus() == ActivityStatus.DONE);
         response.setFinished(finished);
+        response.setImageUrl(project.getImageUrl());
+        if (activities != null) {
+            List<ActivityDTO.Response> activityResponses = activities.stream()
+                .map(activity -> {
+                    ActivityDTO.Response actDto = new ActivityDTO.Response();
+                    actDto.setId(activity.getId());
+                    actDto.setTitle(activity.getTitle());
+                    actDto.setDescription(activity.getDescription());
+                    actDto.setStatus(activity.getStatus()); 
+                    
+                    actDto.setCreatedAt(activity.getCreatedAt());
+                    actDto.setStartedAt(activity.getStartedAt());
+                    actDto.setFinishedAt(activity.getFinishedAt());
+                    return actDto;
+                })
+                .collect(Collectors.toList());
+                
+            response.setActivities(activityResponses);
+        }
         return response;
     }
 }

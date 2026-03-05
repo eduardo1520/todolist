@@ -1,18 +1,39 @@
 package com.todolist.dto;
 
 import java.time.LocalDateTime;
+import java.util.List;
+
 
 public class ProjectDTO {
 
-    public static class Request {
+	public static class Request {
         private String name;
         private String description;
+        private String imageUrl;
 
-        public String getName() { return name; }
-        public void setName(String name) { this.name = name; }
+        public String getName() { 
+        	return name; 
+        }
+        
+        public void setName(String name) { 
+        	this.name = name; 
+        }
 
-        public String getDescription() { return description; }
-        public void setDescription(String description) { this.description = description; }
+        public String getDescription() { 
+        	return description; 
+        }
+        
+        public void setDescription(String description) { 
+        	this.description = description;
+        }
+		
+        public String getImageUrl() {
+			return imageUrl;
+		}
+        
+        public void setImageUrl(String imageUrl) {
+			this.imageUrl = imageUrl;
+		}
 		
     }
 
@@ -27,6 +48,9 @@ public class ProjectDTO {
         private long doingCount;
         private long doneCount;
         private boolean finished;
+        private String imageUrl;
+        
+        private List<ActivityDTO.Response> activities;
 
         public Long getId() { 
         	return id; 
@@ -107,5 +131,22 @@ public class ProjectDTO {
         public void setFinished(boolean statusFinished) {
 			finished = statusFinished;			
 		}
+        
+        public List<ActivityDTO.Response> getActivities() {
+			return activities;
+		}
+        
+        public void setActivities(List<ActivityDTO.Response> activities) {
+			this.activities = activities;
+		}
+        
+        public String getImageUrl() {
+			return imageUrl;
+		}
+        
+        public void setImageUrl(String imageUrl) {
+			this.imageUrl = imageUrl;
+		}
+        
     }
 }
